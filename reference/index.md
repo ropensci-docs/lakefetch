@@ -1,0 +1,83 @@
+# Package index
+
+## Package
+
+- [`lakefetch-package`](https://docs.ropensci.org/lakefetch/reference/lakefetch-package.md)
+  [`lakefetch`](https://docs.ropensci.org/lakefetch/reference/lakefetch-package.md)
+  : lakefetch: Calculate Fetch and Wave Exposure for Lake Sampling
+  Points
+
+## Core Workflow
+
+Main functions for calculating fetch
+
+- [`load_sites()`](https://docs.ropensci.org/lakefetch/reference/load_sites.md)
+  : Load Sites from CSV or Data Frame
+- [`get_lake_boundary()`](https://docs.ropensci.org/lakefetch/reference/get_lake_boundary.md)
+  : Get Lake Boundary
+- [`fetch_calculate()`](https://docs.ropensci.org/lakefetch/reference/fetch_calculate.md)
+  : Calculate Fetch for Lake Sampling Sites
+
+## Visualization
+
+Plotting and mapping functions
+
+- [`plot_fetch_map()`](https://docs.ropensci.org/lakefetch/reference/plot_fetch_map.md)
+  : Plot Fetch Map
+- [`plot_fetch_bars()`](https://docs.ropensci.org/lakefetch/reference/plot_fetch_bars.md)
+  : Plot Fetch Bar Chart
+- [`plot_fetch_rose()`](https://docs.ropensci.org/lakefetch/reference/plot_fetch_rose.md)
+  : Plot Fetch Rose Diagram
+- [`create_ray_geometries()`](https://docs.ropensci.org/lakefetch/reference/create_ray_geometries.md)
+  : Create Ray Geometries for Map Visualization
+
+## Optional Enrichment
+
+Add depth, weather, or hydrological context
+
+- [`add_lake_depth()`](https://docs.ropensci.org/lakefetch/reference/add_lake_depth.md)
+  : Add Depth Information to Fetch Results
+- [`get_lake_depth()`](https://docs.ropensci.org/lakefetch/reference/get_lake_depth.md)
+  : Get Lake Depth Estimates
+- [`add_weather_context()`](https://docs.ropensci.org/lakefetch/reference/add_weather_context.md)
+  : Add Weather Context to Fetch Results
+- [`add_lake_context()`](https://docs.ropensci.org/lakefetch/reference/add_lake_context.md)
+  : Add Lake Context from NHD
+
+## Configuration
+
+Package options
+
+- [`lakefetch_options()`](https://docs.ropensci.org/lakefetch/reference/lakefetch_options.md)
+  : Get or Set lakefetch Package Options
+- [`lakefetch_reset_options()`](https://docs.ropensci.org/lakefetch/reference/lakefetch_reset_options.md)
+  : Reset lakefetch Options to Defaults
+
+## Utilities
+
+Helper functions
+
+- [`assign_sites_to_lakes()`](https://docs.ropensci.org/lakefetch/reference/assign_sites_to_lakes.md)
+  : Assign Sites to Lakes
+- [`sanitize_filename()`](https://docs.ropensci.org/lakefetch/reference/sanitize_filename.md)
+  : Sanitize a String for Use in Filenames
+
+## Interactive Apps
+
+Shiny applications
+
+- [`fetch_app()`](https://docs.ropensci.org/lakefetch/reference/fetch_app.md)
+  : Launch Interactive Fetch App
+- [`fetch_app_upload()`](https://docs.ropensci.org/lakefetch/reference/fetch_app_upload.md)
+  : Launch Interactive Fetch App with File Upload
+
+## Datasets
+
+Built-in example data
+
+- [`adirondack_sites`](https://docs.ropensci.org/lakefetch/reference/adirondack_sites.md)
+  : Adirondack Lake Sampling Sites
+- [`example_lake`](https://docs.ropensci.org/lakefetch/reference/example_lake.md)
+  : Blue Mountain Lake Polygon (Example Lake)
+- [`wisconsin_lakes`](https://docs.ropensci.org/lakefetch/reference/wisconsin_lakes.md)
+  : Wisconsin Lake Sampling Sites

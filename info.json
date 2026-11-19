@@ -1,0 +1,13 @@
+{
+  "commit": {
+    "commit": "31e27e543a60dfd6f64c4576239467f087ec4606",
+    "author": "Farrell <FARREJ2@win.rpi.edu>",
+    "time": "2026-10-09T02:20:16Z",
+    "files": 1,
+    "merge": false,
+    "message": "Update cran-comments with v0.1.14 check results\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n"
+  },
+  "repo": "https://github.com/ropensci/lakefetch",
+  "pkg": "lakefetch",
+  "time": "2026-11-19T14:21:08Z"
+}

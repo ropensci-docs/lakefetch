@@ -1,0 +1,179 @@
+# Getting Started with lakefetch
+
+## Introduction
+
+The **lakefetch** package calculates fetch (open water distance) and
+wave exposure metrics for lake sampling points. Fetch is an important
+physical parameter that influences wave energy, sediment resuspension,
+and habitat characteristics.
+
+## Installation
+
+``` r
+
+install.packages("lakefetch")
+
+# Optional packages for extra features:
+# install.packages("hydrogeofetch")                      # NHD integration
+# install.packages(c("shiny", "leaflet", "base64enc"))  # Interactive app
+```
+
+## Quick Start
+
+### 1. Load your site data
+
+``` r
+
+library(lakefetch)
+
+# From the installed example CSV (two sites on Blue Mountain Lake, NY)
+sites <- load_sites(system.file("extdata", "sample_sites.csv",
+                                package = "lakefetch"))
+```
+
+You can also pass a data.frame directly to
+[`load_sites()`](https://docs.ropensci.org/lakefetch/reference/load_sites.md).
+CSV column names starting with “lat” and “lon” (e.g., “latitude”,
+“longitude”) are detected automatically; use the `lat_col` / `lon_col`
+arguments to override.
+
+### 2. Get lake boundary
+
+``` r
+
+# Automatically download from OpenStreetMap (requires network)
+lake <- get_lake_boundary(sites)
+
+# For very large or complex lakes, increase the Overpass timeout and
+# optionally simplify the polygon for faster downstream computation:
+lake <- get_lake_boundary(sites,
+                          timeout = 300,
+                          simplify_tolerance_m = 100)
+
+# Or load a local shapefile / GeoPackage instead of querying OSM
+lake <- get_lake_boundary(sites, file = "path/to/lake_boundary.gpkg")
+```
+
+### 3. Calculate fetch
+
+``` r
+
+results <- fetch_calculate(sites, lake)
+
+# View results
+head(results$results)
+```
+
+### 4. Visualize
+
+``` r
+
+# Map of sites
+plot_fetch_map(results)
+
+# Bar chart
+plot_fetch_bars(results)
+
+# Interactive app (requires the shiny, leaflet, base64enc packages)
+fetch_app(results)
+```
+
+> The Quick Start chunks above are not evaluated when the vignette is
+> built because they require an internet connection to OpenStreetMap and
+> (for the Shiny app) the optional `shiny`/`leaflet` packages. To run
+> them interactively, simply paste them into an R session.
+
+## Understanding the Results
+
+The
+[`fetch_calculate()`](https://docs.ropensci.org/lakefetch/reference/fetch_calculate.md)
+function returns a list containing:
+
+- `results`: An sf object with one row per site, containing:
+  - `fetch_0`, `fetch_5`, …, `fetch_355`: Fetch distance in each
+    direction (meters)
+  - `fetch_mean`: Average fetch across all directions
+  - `fetch_max`: Maximum fetch (longest open water distance)
+  - `fetch_effective`: Mean of the three longest fetch values
+  - `orbital_effective`: Estimated wave orbital velocity (m/s)
+  - `exposure_category`: Classification as “Sheltered”, “Moderate”, or
+    “Exposed”
+- `lakes`: The lake polygon(s) used for calculation
+- `angles`: The angles (in degrees) used for ray-casting
+
+## Exposure Categories
+
+Sites are classified based on effective fetch:
+
+| Category  | Effective Fetch | Typical Conditions                   |
+|-----------|-----------------|--------------------------------------|
+| Sheltered | \< 2.5 km       | Protected bays, minimal wave action  |
+| Moderate  | 2.5 - 5 km      | Some wave exposure, mixed conditions |
+| Exposed   | \> 5 km         | Open water, significant wave energy  |
+
+## Configuration Options
+
+Customize the calculation parameters:
+
+``` r
+
+# View current options
+lakefetch_options()
+
+# Change options
+lakefetch_options(
+  buffer_distance_m = 20,      # GPS accuracy buffer
+  angle_resolution_deg = 10,   # Direction resolution (degrees)
+  max_fetch_m = 30000,         # Maximum fetch distance
+  use_parallel = TRUE          # Parallel processing for multiple lakes
+)
+
+# Reset to defaults
+lakefetch_reset_options()
+```
+
+## NHD Integration
+
+If the `hydrogeofetch` package is installed, lakefetch can add
+hydrological context from the National Hydrography Dataset: - Lake
+outlet and inlet locations - Distance and direction to outlet/inlets
+from each site - Connectivity classification (Headwater, Drainage,
+Terminal, Isolated) - Outlet stream order - Watershed area
+
+``` r
+
+# NHD context is added automatically if available
+results <- fetch_calculate(sites, lake, add_context = TRUE)
+
+# Check connectivity
+table(results$results$connectivity_class)
+```
+
+## Working with Multiple Lakes
+
+If your sites span multiple lakes, lakefetch handles this automatically:
+
+``` r
+
+# Sites are assigned to their containing lake polygon
+sites_with_lakes <- assign_sites_to_lakes(lake$sites, lake$all_lakes)
+
+# Check assignment
+table(sites_with_lakes$lake_name)
+```
+
+## Exporting Results
+
+``` r
+
+# To CSV (without geometry)
+write.csv(sf::st_drop_geometry(results$results),
+          "fetch_results.csv", row.names = FALSE)
+
+# To GeoPackage (with geometry)
+sf::st_write(results$results, "fetch_results.gpkg")
+
+# Export ray geometries for GIS
+rays <- create_ray_geometries(results)
+sf::st_write(rays, "fetch_rays.gpkg")
+```
